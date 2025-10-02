@@ -1,0 +1,95 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fondo -->
+  <rect width="1200" height="630" fill="#f8fafc"/>
+  
+  <!-- Gradiente de fondo -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2563eb;stop-opacity:0.1" />
+      <stop offset="100%" style="stop-color:#1d4ed8;stop-opacity:0.05" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bgGradient)"/>
+  
+  <!-- Edificio principal -->
+  <g transform="translate(100, 150)">
+    <!-- Base del edificio -->
+    <rect x="0" y="100" width="200" height="280" fill="#2563eb" stroke="#1d4ed8" stroke-width="3"/>
+    
+    <!-- Ventanas -->
+    <rect x="20" y="120" width="25" height="25" fill="#ffffff" opacity="0.9"/>
+    <rect x="55" y="120" width="25" height="25" fill="#ffffff" opacity="0.9"/>
+    <rect x="90" y="120" width="25" height="25" fill="#ffffff" opacity="0.9"/>
+    <rect x="125" y="120" width="25" height="25" fill="#ffffff" opacity="0.9"/>
+    <rect x="160" y="120" width="25" height="25" fill="#ffffff" opacity="0.9"/>
+    
+    <rect x="20" y="155" width="25" height="25" fill="#ffffff" opacity="0.9"/>
+    <rect x="55" y="155" width="25" height="25" fill="#ffffff" opacity="0.9"/>
+    <rect x="90" y="155" width="25" height="25" fill="#ffffff" opacity="0.9"/>
+    <rect x="125" y="155" width="25" height="25" fill="#ffffff" opacity="0.9"/>
+    <rect x="160" y="155" width="25" height="25" fill="#ffffff" opacity="0.9"/>
+    
+    <rect x="20" y="190" width="25" height="25" fill="#ffffff" opacity="0.9"/>
+    <rect x="55" y="190" width="25" height="25" fill="#ffffff" opacity="0.9"/>
+    <rect x="90" y="190" width="25" height="25" fill="#ffffff" opacity="0.9"/>
+    <rect x="125" y="190" width="25" height="25" fill="#ffffff" opacity="0.9"/>
+    <rect x="160" y="190" width="25" height="25" fill="#ffffff" opacity="0.9"/>
+    
+    <rect x="20" y="225" width="25" height="25" fill="#ffffff" opacity="0.9"/>
+    <rect x="55" y="225" width="25" height="25" fill="#ffffff" opacity="0.9"/>
+    <rect x="90" y="225" width="25" height="25" fill="#ffffff" opacity="0.9"/>
+    <rect x="125" y="225" width="25" height="25" fill="#ffffff" opacity="0.9"/>
+    <rect x="160" y="225" width="25" height="25" fill="#ffffff" opacity="0.9"/>
+    
+    <rect x="20" y="260" width="25" height="25" fill="#ffffff" opacity="0.9"/>
+    <rect x="55" y="260" width="25" height="25" fill="#ffffff" opacity="0.9"/>
+    <rect x="90" y="260" width="25" height="25" fill="#ffffff" opacity="0.9"/>
+    <rect x="125" y="260" width="25" height="25" fill="#ffffff" opacity="0.9"/>
+    <rect x="160" y="260" width="25" height="25" fill="#ffffff" opacity="0.9"/>
+    
+    <rect x="20" y="295" width="25" height="25" fill="#ffffff" opacity="0.9"/>
+    <rect x="55" y="295" width="25" height="25" fill="#ffffff" opacity="0.9"/>
+    <rect x="90" y="295" width="25" height="25" fill="#ffffff" opacity="0.9"/>
+    <rect x="125" y="295" width="25" height="25" fill="#ffffff" opacity="0.9"/>
+    <rect x="160" y="295" width="25" height="25" fill="#ffffff" opacity="0.9"/>
+    
+    <!-- Puerta -->
+    <rect x="85" y="320" width="30" height="60" fill="#1e40af"/>
+    
+    <!-- Techo -->
+    <polygon points="0,100 100,50 200,100" fill="#1e40af"/>
+    
+    <!-- Antena -->
+    <line x1="100" y1="50" x2="100" y2="30" stroke="#374151" stroke-width="2"/>
+    <circle cx="100" cy="30" r="3" fill="#374151"/>
+  </g>
+  
+  <!-- Título -->
+  <text x="400" y="200" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="#1e293b">
+    THE ONE Inmobiliaria
+  </text>
+  
+  <!-- Subtítulo -->
+  <text x="400" y="250" font-family="Arial, sans-serif" font-size="24" fill="#64748b">
+    Sistema CRM Demo
+  </text>
+  
+  <!-- Descripción -->
+  <text x="400" y="300" font-family="Arial, sans-serif" font-size="18" fill="#64748b">
+    Gestión de prospectos inmobiliarios
+  </text>
+  <text x="400" y="330" font-family="Arial, sans-serif" font-size="18" fill="#64748b">
+    Análisis de conversaciones y métricas
+  </text>
+  
+  <!-- URL -->
+  <text x="400" y="400" font-family="Arial, sans-serif" font-size="16" fill="#2563eb">
+    demobroker.netlify.app
+  </text>
+  
+  <!-- Elementos decorativos -->
+  <circle cx="1000" cy="150" r="50" fill="#2563eb" opacity="0.1"/>
+  <circle cx="1100" cy="300" r="30" fill="#1d4ed8" opacity="0.1"/>
+  <circle cx="1050" cy="450" r="40" fill="#2563eb" opacity="0.1"/>
+</svg>
+

@@ -1,0 +1,27 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Edificio principal -->
+  <rect x="6" y="8" width="20" height="22" fill="#2563eb" stroke="#1d4ed8" stroke-width="1"/>
+  
+  <!-- Ventanas -->
+  <rect x="9" y="12" width="3" height="3" fill="#ffffff" opacity="0.9"/>
+  <rect x="14" y="12" width="3" height="3" fill="#ffffff" opacity="0.9"/>
+  <rect x="19" y="12" width="3" height="3" fill="#ffffff" opacity="0.9"/>
+  
+  <rect x="9" y="17" width="3" height="3" fill="#ffffff" opacity="0.9"/>
+  <rect x="14" y="17" width="3" height="3" fill="#ffffff" opacity="0.9"/>
+  <rect x="19" y="17" width="3" height="3" fill="#ffffff" opacity="0.9"/>
+  
+  <rect x="9" y="22" width="3" height="3" fill="#ffffff" opacity="0.9"/>
+  <rect x="14" y="22" width="3" height="3" fill="#ffffff" opacity="0.9"/>
+  <rect x="19" y="22" width="3" height="3" fill="#ffffff" opacity="0.9"/>
+  
+  <!-- Puerta -->
+  <rect x="14" y="25" width="4" height="5" fill="#1e40af"/>
+  
+  <!-- Techo -->
+  <polygon points="4,8 16,2 28,8" fill="#1e40af"/>
+  
+  <!-- Antena -->
+  <line x1="16" y1="2" x2="16" y2="0" stroke="#374151" stroke-width="1"/>
+  <circle cx="16" cy="0" r="1" fill="#374151"/>
+</svg>

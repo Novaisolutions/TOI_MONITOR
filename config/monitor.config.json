@@ -1,0 +1,75 @@
+{
+  "monitor_version": "2.0.0",
+  "base_template": true,
+  "supported_industries": [
+    "real_estate",
+    "services",
+    "education",
+    "healthcare",
+    "retail",
+    "consulting"
+  ],
+  "required_supabase_tables": [
+    "usuarios_toi",
+    "equipos",
+    "conversaciones_toi",
+    "mensajes_toi",
+    "prospectos_toi",
+    "oportunidades",
+    "seguimientos"
+  ],
+  "optional_integrations": {
+    "whatsapp": {
+      "enabled": false,
+      "requires": ["WHATSAPP_ACCESS_TOKEN"]
+    },
+    "kommo": {
+      "enabled": false,
+      "requires": ["VITE_KOMMO_ACCESS_TOKEN"]
+    },
+    "openai": {
+      "enabled": false,
+      "requires": ["VITE_OPENAI_KEY"]
+    },
+    "n8n": {
+      "enabled": false,
+      "requires": ["VITE_N8N_PROMPT_GET", "VITE_N8N_PROMPT_SET"]
+    }
+  },
+  "customization_points": {
+    "branding": {
+      "files": [
+        "public/favicon.ico",
+        "public/bot-logo.png",
+        "public/Logo_cenyca.jpeg",
+        "index.html",
+        "package.json",
+        "public/manifest.webmanifest"
+      ]
+    },
+    "database": {
+      "customizable_tables": [
+        "prospectos_toi",
+        "oportunidades"
+      ],
+      "instructions": "Add custom columns via ALTER TABLE statements"
+    },
+    "theme": {
+      "file": "tailwind.config.js",
+      "variables": [
+        "colors.primary",
+        "colors.secondary"
+      ]
+    }
+  },
+  "deployment": {
+    "recommended_platform": "netlify",
+    "build_command": "npm run build",
+    "output_directory": "dist",
+    "node_version": "18",
+    "environment_variables": [
+      "VITE_SUPABASE_URL",
+      "VITE_SUPABASE_ANON_KEY"
+    ]
+  }
+}

@@ -1,0 +1,315 @@
+{
+  "name": "WhatsApp - Guardar Mensajes Enviados",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "whatsapp-message-send",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [200, 300],
+      "id": "webhook-whatsapp-message-send",
+      "name": "WhatsApp Message Send",
+      "webhookId": "whatsapp-message-send"
+    },
+    {
+      "parameters": {
+        "url": "=https://pudrykifftcwxjlvdgmu.supabase.co/rest/v1/conversaciones_toi?numero=eq.{{ $json.body.numero }}&select=id,total_mensajes,total_mensajes_salida",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $env.SUPABASE_ANON_KEY }}"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.SUPABASE_ANON_KEY }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [400, 300],
+      "id": "buscar-conversacion",
+      "name": "Buscar Conversación"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "condition-exists",
+              "leftValue": "={{ $json.length }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [600, 300],
+      "id": "if-conversation-exists",
+      "name": "¿Existe Conversación?"
+    },
+    {
+      "parameters": {
+        "url": "https://pudrykifftcwxjlvdgmu.supabase.co/rest/v1/conversaciones_toi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $env.SUPABASE_ANON_KEY }}"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.SUPABASE_ANON_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Prefer",
+              "value": "return=representation"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ {\n  numero: $('WhatsApp Message Send').item.json.body.numero,\n  nombre_contacto: null,\n  ultimo_mensaje_resumen: $('WhatsApp Message Send').item.json.body.mensaje.substring(0, 100),\n  ultimo_mensaje_fecha: $('WhatsApp Message Send').item.json.body.fecha,\n  ultimo_mensaje_tipo: 'salida',\n  ultimo_mensaje_salida_fecha: $('WhatsApp Message Send').item.json.body.fecha,\n  total_mensajes: 1,\n  total_mensajes_salida: 1,\n  total_mensajes_entrada: 0,\n  horas_sin_respuesta: 0\n} }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [800, 400],
+      "id": "crear-conversacion",
+      "name": "Crear Conversación"
+    },
+    {
+      "parameters": {
+        "url": "https://pudrykifftcwxjlvdgmu.supabase.co/rest/v1/mensajes_toi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $env.SUPABASE_ANON_KEY }}"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.SUPABASE_ANON_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Prefer",
+              "value": "return=minimal"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ {\n  tipo: $('WhatsApp Message Send').item.json.body.tipo,\n  numero: $('WhatsApp Message Send').item.json.body.numero,\n  mensaje: $('WhatsApp Message Send').item.json.body.mensaje,\n  fecha: $('WhatsApp Message Send').item.json.body.fecha,\n  nombre: $('WhatsApp Message Send').item.json.body.nombre,\n  media_url: null,\n  leido: true,\n  conversation_id: $('¿Existe Conversación?').item.json[0]?.id || $('Crear Conversación').item.json[0]?.id\n} }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1000, 300],
+      "id": "guardar-mensaje-toi",
+      "name": "Guardar en mensajes_toi"
+    },
+    {
+      "parameters": {
+        "url": "https://pudrykifftcwxjlvdgmu.supabase.co/rest/v1/n8n_chat_histories",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $env.SUPABASE_ANON_KEY }}"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.SUPABASE_ANON_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Prefer",
+              "value": "return=minimal"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ {\n  session_id: $('WhatsApp Message Send').item.json.body.session_id,\n  message: JSON.stringify($('WhatsApp Message Send').item.json.body.chat_message)\n} }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1000, 500],
+      "id": "guardar-chat-history",
+      "name": "Guardar en n8n_chat_histories"
+    },
+    {
+      "parameters": {
+        "url": "=https://pudrykifftcwxjlvdgmu.supabase.co/rest/v1/conversaciones_toi?id=eq.{{ $('¿Existe Conversación?').item.json[0]?.id || $('Crear Conversación').item.json[0]?.id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $env.SUPABASE_ANON_KEY }}"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.SUPABASE_ANON_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "method": "PATCH",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ {\n  ultimo_mensaje_resumen: $('WhatsApp Message Send').item.json.body.mensaje.substring(0, 100),\n  ultimo_mensaje_fecha: $('WhatsApp Message Send').item.json.body.fecha,\n  ultimo_mensaje_tipo: 'salida',\n  ultimo_mensaje_salida_fecha: $('WhatsApp Message Send').item.json.body.fecha,\n  total_mensajes_salida: ($('¿Existe Conversación?').item.json[0]?.total_mensajes_salida || 0) + 1,\n  total_mensajes: ($('¿Existe Conversación?').item.json[0]?.total_mensajes || 0) + 1,\n  updated_at: $('WhatsApp Message Sent').item.json.body.fecha\n} }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1200, 300],
+      "id": "actualizar-conversacion",
+      "name": "Actualizar Conversación"
+    }
+  ],
+  "connections": {
+    "WhatsApp Message Send": {
+      "main": [
+        [
+          {
+            "node": "Buscar Conversación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar Conversación": {
+      "main": [
+        [
+          {
+            "node": "¿Existe Conversación?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Existe Conversación?": {
+      "main": [
+        [
+          {
+            "node": "Guardar en mensajes_toi",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Guardar en n8n_chat_histories",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Crear Conversación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crear Conversación": {
+      "main": [
+        [
+          {
+            "node": "Guardar en mensajes_toi",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Guardar en n8n_chat_histories",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardar en mensajes_toi": {
+      "main": [
+        [
+          {
+            "node": "Actualizar Conversación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardar en n8n_chat_histories": {
+      "main": [
+        []
+      ]
+    },
+    "Actualizar Conversación": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2025-01-30T10:00:00.000Z",
+      "updatedAt": "2025-01-30T10:00:00.000Z",
+      "id": "whatsapp",
+      "name": "WhatsApp"
+    },
+    {
+      "createdAt": "2025-01-30T10:00:00.000Z",
+      "updatedAt": "2025-01-30T10:00:00.000Z",
+      "id": "demo-brokers",
+      "name": "Demo Brokers"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2025-01-30T10:00:00.000Z",
+  "versionId": "1"
+}
+

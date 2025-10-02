@@ -1,0 +1,483 @@
+{
+  "project": {
+    "name": "Monitor Base",
+    "version": "2.0.0",
+    "repository": "https://github.com/Novaisolutions/TOI_MONITOR",
+    "description": "CRM Multi-Cliente para gestión de conversaciones, leads y oportunidades",
+    "tech_stack": {
+      "frontend": "React 18 + TypeScript + Vite",
+      "backend": "Supabase (PostgreSQL + Auth + Realtime)",
+      "ui": "Tailwind CSS + Radix UI + Lucide Icons",
+      "deploy": "Netlify + Netlify Functions"
+    }
+  },
+  
+  "setup_instructions": {
+    "estimated_time": "15-20 minutes",
+    "difficulty": "intermediate",
+    
+    "prerequisites": {
+      "required": [
+        {
+          "name": "Node.js",
+          "version": "18+",
+          "check_command": "node -v",
+          "install_url": "https://nodejs.org"
+        },
+        {
+          "name": "npm",
+          "version": "latest",
+          "check_command": "npm -v",
+          "install_url": "https://nodejs.org"
+        },
+        {
+          "name": "Git",
+          "version": "any",
+          "check_command": "git --version",
+          "install_url": "https://git-scm.com"
+        }
+      ],
+      "optional": [
+        {
+          "name": "Supabase CLI",
+          "version": "latest",
+          "check_command": "supabase --version",
+          "install_url": "https://supabase.com/docs/guides/cli"
+        }
+      ]
+    },
+    
+    "phases": [
+      {
+        "phase": 1,
+        "name": "Verify Requirements",
+        "description": "Check if Node.js, npm, and Git are installed",
+        "commands": [
+          "node -v",
+          "npm -v",
+          "git --version"
+        ],
+        "success_criteria": "All commands return version numbers",
+        "estimated_time": "1 minute",
+        "troubleshooting": {
+          "node_not_found": "Install Node.js 18+ from https://nodejs.org",
+          "git_not_found": "Install Git from https://git-scm.com"
+        }
+      },
+      
+      {
+        "phase": 2,
+        "name": "Clone Repository",
+        "description": "Clone the Monitor Base project from GitHub",
+        "commands": [
+          "cd [USER_CHOSEN_DIRECTORY]",
+          "git clone https://github.com/Novaisolutions/TOI_MONITOR.git",
+          "cd TOI_MONITOR"
+        ],
+        "success_criteria": "Directory TOI_MONITOR exists with project files",
+        "estimated_time": "2 minutes",
+        "user_input": {
+          "question": "Where do you want to clone the project?",
+          "example": "~/Projects/my-client",
+          "validation": "Must be a valid directory path"
+        }
+      },
+      
+      {
+        "phase": 3,
+        "name": "Install Dependencies",
+        "description": "Install all npm packages required by the project",
+        "commands": [
+          "npm install"
+        ],
+        "success_criteria": "~478 packages installed without errors",
+        "estimated_time": "3 minutes",
+        "troubleshooting": {
+          "permission_error": "Run: sudo chown -R $(whoami) ~/.npm",
+          "network_error": "Check internet connection and try again",
+          "corrupted_cache": "Run: npm cache clean --force && npm install"
+        }
+      },
+      
+      {
+        "phase": 4,
+        "name": "Request Supabase Credentials",
+        "description": "Ask user for Supabase project credentials",
+        "user_input": {
+          "required": [
+            {
+              "key": "VITE_SUPABASE_URL",
+              "name": "Supabase Project URL",
+              "example": "https://xxxxxxxxxxxxx.supabase.co",
+              "validation": {
+                "pattern": "^https://.*\\.supabase\\.co$",
+                "error_message": "URL must start with 'https://' and end with '.supabase.co'"
+              },
+              "where_to_find": "Supabase Dashboard → Settings → API → Project URL"
+            },
+            {
+              "key": "VITE_SUPABASE_ANON_KEY",
+              "name": "Supabase Anonymous Key",
+              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+              "validation": {
+                "pattern": "^eyJ.*",
+                "error_message": "Key must start with 'eyJ'"
+              },
+              "where_to_find": "Supabase Dashboard → Settings → API → anon public"
+            }
+          ],
+          "optional": [
+            {
+              "key": "VITE_OPENAI_KEY",
+              "name": "OpenAI API Key (for AI features)",
+              "example": "sk-proj-xxxxxxxxxxxxxxxx",
+              "required": false
+            }
+          ]
+        },
+        "success_criteria": "All required credentials collected and validated",
+        "estimated_time": "2 minutes"
+      },
+      
+      {
+        "phase": 5,
+        "name": "Create .env File",
+        "description": "Create environment variables file with credentials",
+        "commands": [
+          "cp .env.example .env"
+        ],
+        "file_edit": {
+          "file": ".env",
+          "replacements": [
+            {
+              "find": "VITE_SUPABASE_URL=https://tu-proyecto.supabase.co",
+              "replace_with": "VITE_SUPABASE_URL=[USER_PROVIDED_URL]"
+            },
+            {
+              "find": "VITE_SUPABASE_ANON_KEY=tu_clave_anonima_aqui",
+              "replace_with": "VITE_SUPABASE_ANON_KEY=[USER_PROVIDED_KEY]"
+            }
+          ]
+        },
+        "success_criteria": ".env file exists with valid credentials",
+        "estimated_time": "1 minute",
+        "security_note": "NEVER commit .env file to Git"
+      },
+      
+      {
+        "phase": 6,
+        "name": "Execute SQL Scripts",
+        "description": "Run database migrations in Supabase SQL Editor",
+        "manual_steps": true,
+        "instructions": "Guide user to execute SQL scripts in Supabase Dashboard",
+        "sql_scripts": [
+          {
+            "order": 1,
+            "name": "Table Structure",
+            "file": "supabase/update_tables_structure.sql",
+            "description": "Creates all database tables",
+            "estimated_time": "30 seconds"
+          },
+          {
+            "order": 2,
+            "name": "Security Policies (RLS)",
+            "file": "supabase/rls.sql",
+            "description": "Sets up Row Level Security",
+            "estimated_time": "20 seconds"
+          },
+          {
+            "order": 3,
+            "name": "Conversations Optimization",
+            "file": "supabase/conversations_optimization.sql",
+            "description": "Optimizes conversation queries",
+            "estimated_time": "10 seconds"
+          },
+          {
+            "order": 4,
+            "name": "Prospects Optimization",
+            "file": "supabase/prospectos_optimization.sql",
+            "description": "Optimizes prospect queries",
+            "estimated_time": "10 seconds"
+          },
+          {
+            "order": 5,
+            "name": "Follow-ups Optimization",
+            "file": "supabase/seguimiento_optimizado.sql",
+            "description": "Optimizes follow-up tracking",
+            "estimated_time": "10 seconds"
+          },
+          {
+            "order": 6,
+            "name": "Prospect Creation Trigger",
+            "file": "supabase/prospect_creation_trigger.sql",
+            "description": "Auto-creates prospects from messages",
+            "estimated_time": "5 seconds"
+          },
+          {
+            "order": 7,
+            "name": "Auto Movement Trigger",
+            "file": "supabase/auto_prospect_movement.sql",
+            "description": "Automatically moves prospects between stages",
+            "estimated_time": "5 seconds"
+          }
+        ],
+        "how_to_execute": {
+          "steps": [
+            "1. Open Supabase project at https://supabase.com/dashboard",
+            "2. Navigate to 'SQL Editor' in left sidebar",
+            "3. Click 'New query'",
+            "4. Open the SQL file in your code editor",
+            "5. Copy all content from the file",
+            "6. Paste into Supabase SQL Editor",
+            "7. Click 'Run' button or press Ctrl+Enter",
+            "8. Wait for 'Success' message",
+            "9. Repeat for all 7 scripts in order"
+          ]
+        },
+        "success_criteria": "All 7 scripts executed without errors",
+        "estimated_time": "5 minutes"
+      },
+      
+      {
+        "phase": 7,
+        "name": "Create Admin User",
+        "description": "Create first administrator account",
+        "user_input": {
+          "required": [
+            {
+              "key": "admin_email",
+              "name": "Admin Email",
+              "example": "admin@cliente.com",
+              "validation": {
+                "pattern": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
+                "error_message": "Must be a valid email address"
+              }
+            },
+            {
+              "key": "admin_password",
+              "name": "Admin Password",
+              "example": "SecurePassword123",
+              "validation": {
+                "min_length": 6,
+                "error_message": "Password must be at least 6 characters"
+              },
+              "security_note": "Choose a strong password"
+            }
+          ]
+        },
+        "options": [
+          {
+            "method": "Supabase Dashboard",
+            "steps": [
+              "1. Go to Authentication → Users",
+              "2. Click 'Add user' → 'Create new user'",
+              "3. Enter email and password",
+              "4. Enable 'Auto Confirm User'",
+              "5. Click 'Create user'"
+            ],
+            "recommended": true
+          },
+          {
+            "method": "SQL Editor",
+            "sql_template": "INSERT INTO auth.users (instance_id, id, aud, role, email, encrypted_password, email_confirmed_at, created_at, updated_at) VALUES ('00000000-0000-0000-0000-000000000000', gen_random_uuid(), 'authenticated', 'authenticated', '[EMAIL]', crypt('[PASSWORD]', gen_salt('bf')), now(), now(), now());",
+            "note": "Replace [EMAIL] and [PASSWORD] with actual values"
+          }
+        ],
+        "success_criteria": "User can be seen in Supabase Auth → Users",
+        "estimated_time": "2 minutes"
+      },
+      
+      {
+        "phase": 8,
+        "name": "Start Development Server",
+        "description": "Run the application locally",
+        "commands": [
+          "npm run dev"
+        ],
+        "success_criteria": "Server starts and browser opens at http://localhost:5173",
+        "estimated_time": "1 minute",
+        "expected_output": {
+          "contains": [
+            "VITE",
+            "localhost:5173",
+            "ready in"
+          ]
+        },
+        "troubleshooting": {
+          "port_in_use": {
+            "error": "Port 5173 already in use",
+            "solution": "kill -9 $(lsof -ti:5173) && npm run dev"
+          },
+          "module_not_found": {
+            "error": "Cannot find module",
+            "solution": "rm -rf node_modules && npm install"
+          }
+        }
+      },
+      
+      {
+        "phase": 9,
+        "name": "Validate Access",
+        "description": "Verify user can login and access dashboard",
+        "validation_steps": [
+          {
+            "step": 1,
+            "action": "Open browser at http://localhost:5173",
+            "expected": "Login screen appears"
+          },
+          {
+            "step": 2,
+            "action": "Enter admin credentials from Phase 7",
+            "expected": "Login button enabled"
+          },
+          {
+            "step": 3,
+            "action": "Click 'Iniciar Sesión'",
+            "expected": "Dashboard loads without errors"
+          },
+          {
+            "step": 4,
+            "action": "Open browser console (F12)",
+            "expected": "No red error messages"
+          }
+        ],
+        "success_criteria": "User successfully logged in and viewing dashboard",
+        "estimated_time": "2 minutes"
+      }
+    ]
+  },
+  
+  "customization": {
+    "optional": true,
+    "when": "after_successful_setup",
+    "options": [
+      {
+        "name": "Change Branding",
+        "files_to_modify": [
+          {
+            "file": "package.json",
+            "field": "name",
+            "example": "monitor-cliente-nombre"
+          },
+          {
+            "file": "index.html",
+            "find": "<title>Monitor - The One Inmobiliaria</title>",
+            "replace_with": "<title>Monitor - [CLIENT_NAME]</title>"
+          },
+          {
+            "file": "public/bot-logo.png",
+            "action": "replace_file",
+            "note": "Replace with client's logo"
+          },
+          {
+            "file": "public/favicon.ico",
+            "action": "replace_file",
+            "note": "Replace with client's favicon"
+          }
+        ]
+      },
+      {
+        "name": "Change Colors",
+        "file": "tailwind.config.js",
+        "section": "theme.extend.colors",
+        "note": "Modify primary and secondary colors"
+      }
+    ]
+  },
+  
+  "success_checklist": [
+    "Node.js 18+ installed",
+    "Repository cloned successfully",
+    "npm install completed without errors",
+    "Supabase credentials obtained and validated",
+    ".env file created with correct values",
+    "All 7 SQL scripts executed successfully",
+    "Admin user created in Supabase Auth",
+    "npm run dev running without errors",
+    "Login successful with admin credentials",
+    "Dashboard loads and displays data"
+  ],
+  
+  "common_errors": [
+    {
+      "error": "Module not found",
+      "cause": "Dependencies not installed or corrupted",
+      "solution": "rm -rf node_modules package-lock.json && npm install"
+    },
+    {
+      "error": "Port 5173 already in use",
+      "cause": "Another process using the port",
+      "solution": "kill -9 $(lsof -ti:5173)"
+    },
+    {
+      "error": "Invalid API credentials",
+      "cause": "Wrong Supabase URL or Key in .env",
+      "solution": "Verify credentials in Supabase Dashboard → Settings → API"
+    },
+    {
+      "error": "Table does not exist",
+      "cause": "SQL scripts not executed",
+      "solution": "Execute all 7 SQL scripts in Supabase SQL Editor in order"
+    },
+    {
+      "error": "User not found",
+      "cause": "Admin user not created",
+      "solution": "Create user in Supabase Authentication → Users"
+    }
+  ],
+  
+  "quick_commands": {
+    "start_dev": "npm run dev",
+    "build": "npm run build",
+    "preview": "npm run preview",
+    "reinstall": "rm -rf node_modules && npm install",
+    "clear_port": "kill -9 $(lsof -ti:5173)",
+    "clear_cache": "npm cache clean --force"
+  },
+  
+  "deployment": {
+    "platform": "Netlify",
+    "when": "after_successful_local_setup",
+    "steps": [
+      "Push code to GitHub repository",
+      "Connect GitHub repo to Netlify",
+      "Add environment variables in Netlify",
+      "Deploy automatically"
+    ],
+    "environment_variables": [
+      "VITE_SUPABASE_URL",
+      "VITE_SUPABASE_ANON_KEY"
+    ]
+  },
+  
+  "agent_guidelines": {
+    "be_patient": "Some steps take time (npm install ~3 min)",
+    "validate_each_step": "Don't proceed without confirmation of success",
+    "explain_errors": "Provide clear, simple explanations",
+    "offer_alternatives": "Always have a plan B",
+    "maintain_security": "Never log or store credentials",
+    "document_changes": "Note any deviations from standard process"
+  },
+  
+  "support": {
+    "documentation": [
+      "AI_AGENT_INSTRUCTIONS.md",
+      "README.md",
+      "SETUP_GUIDE.md",
+      "QUICKSTART.md"
+    ],
+    "contact": {
+      "email": "soporte@novaisolutions.com",
+      "repository_issues": "https://github.com/Novaisolutions/TOI_MONITOR/issues"
+    }
+  },
+  
+  "metadata": {
+    "version": "2.0.0",
+    "last_updated": "2025-10-02",
+    "compatible_node": "18+",
+    "compatible_os": ["macOS", "Linux", "Windows"],
+    "language": "es-MX",
+    "license": "Proprietary - Novai Solutions"
+  }
+}
